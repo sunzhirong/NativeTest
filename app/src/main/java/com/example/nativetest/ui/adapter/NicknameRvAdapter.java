@@ -4,16 +4,17 @@ import android.content.Context;
 import android.view.View;
 
 import com.example.nativetest.R;
+import com.example.nativetest.model.VIPConfigBean;
 import com.example.nativetest.widget.SelectNicknameItemView;
 
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NicknameRvAdapter extends BaseRvAdapter<NicknameRvAdapter.NickNameBean> {
+public class NicknameRvAdapter extends BaseRvAdapter<VIPConfigBean> {
 
 
-    public NicknameRvAdapter(Context context, List<NickNameBean> datas) {
+    public NicknameRvAdapter(Context context, List<VIPConfigBean> datas) {
         super(context, datas);
     }
 
@@ -24,13 +25,7 @@ public class NicknameRvAdapter extends BaseRvAdapter<NicknameRvAdapter.NickNameB
 
     @Override
     protected void bindData(RecyclerView.ViewHolder holder, int position) {
-        ((SelectNicknameItemView) holder.itemView).bindData(mDatas.get(position));
+        ((SelectNicknameItemView) holder.itemView).bindData(mDatas.get(position),position);
     }
 
-    public static class NickNameBean{
-        public int color;
-        public int src;
-        public int colorname;
-        public int avatarSrc;
-    }
 }

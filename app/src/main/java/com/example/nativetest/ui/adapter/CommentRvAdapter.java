@@ -22,6 +22,6 @@ public class CommentRvAdapter extends BaseRvAdapter<CommentBean>{
 
     @Override
     protected void bindData(RecyclerView.ViewHolder holder, int position) {
-        ((ItemComment) holder.itemView).bindData();
+        ((ItemComment) holder.itemView).bindData(mDatas.get(position));
     }
 }

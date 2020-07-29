@@ -11,6 +11,7 @@ import android.widget.PopupWindow;
 
 import com.example.nativetest.event.ShowMoreEvent;
 import com.example.nativetest.ui.activity.ContactsActivity;
+import com.example.nativetest.ui.activity.SelectGoupMemberActivity;
 import com.example.nativetest.ui.fragment.CommentFragment;
 import com.example.nativetest.ui.fragment.MyChatFragment;
 import com.flyco.tablayout.SlidingScaleTabLayout;
@@ -41,6 +42,12 @@ public class ChatFragment extends BaseFragment {
 
 
     private PopupWindow mPopupWindow;
+    private MyChatFragment mMyChatFragment;
+    private CommentFragment mCommentFragment;
+
+    public CommentFragment getCommentFragment() {
+        return mCommentFragment;
+    }
 
     @Override
     protected int getLayoutResId() {
@@ -53,6 +60,9 @@ public class ChatFragment extends BaseFragment {
         if (mFlOrderLayout.getForeground() != null) {
             mFlOrderLayout.getForeground().setAlpha(0);
         }
+
+        mMyChatFragment = MyChatFragment.getInstance(0);
+        mCommentFragment = CommentFragment.getInstance(1);
 
         // ViewPager 的 Adpater
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getActivity().getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
@@ -78,9 +88,9 @@ public class ChatFragment extends BaseFragment {
             @Override
             public Fragment getItem(int i) {
                 if(i == 0 ){
-                    return MyChatFragment.getInstance(i);
+                    return mMyChatFragment;
                 }
-                return CommentFragment.getInstance(i);
+                return mCommentFragment;
             }
         };
 
@@ -136,7 +146,9 @@ public class ChatFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     mPopupWindow.dismiss();
-                    RongIM.getInstance().startGroupChat(getActivity(), "1", "标题");
+//                    RongIM.getInstance().startGroupChat(getActivity(), "1", "标题");
+                    readyGo(SelectGoupMemberActivity.class);
+
                 }
             });
             mPopupWindow = new PopupWindow(view, ViewPager.LayoutParams.WRAP_CONTENT, ViewPager.LayoutParams.WRAP_CONTENT, true);

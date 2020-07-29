@@ -1,13 +1,18 @@
 package com.example.nativetest.ui.activity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.nativetest.ProfileUtils;
 import com.example.nativetest.R;
 import com.example.nativetest.common.NetConstant;
+import com.example.nativetest.db.model.ProfileHeadInfo;
 import com.example.nativetest.event.RefreshProfileEvent;
 import com.example.nativetest.event.SelectAtEvent;
 import com.example.nativetest.event.SelectCompleteEvent;
@@ -39,10 +44,13 @@ public class SelectAtPersonActivity extends BaseActivity {
     TagFlowLayout mFl;
     @BindView(R.id.rv_follow)
     RecyclerView mRvFollow;
-    private TagAdapter<FollowBean> mTagAdapter;
-    private List<FollowBean> mList;
+    @BindView(R.id.et_search)
+    EditText mEtSearch;
+    private TagAdapter<ProfileHeadInfo> mTagAdapter;
+    private List<ProfileHeadInfo> mList;
     private UserInfoViewModel mUserInfoViewModel;
     private FollowRvAdapter mFollowRvAdapter;
+    private List<ProfileHeadInfo> mRsData;
 
     @Override
     protected int getLayoutId() {
@@ -53,9 +61,9 @@ public class SelectAtPersonActivity extends BaseActivity {
     protected void initView() {
         EventBus.getDefault().register(this);
         mList = new ArrayList<>();
-        mTagAdapter = new TagAdapter<FollowBean>(mList) {
+        mTagAdapter = new TagAdapter<ProfileHeadInfo>(mList) {
             @Override
-            public View getView(FlowLayout parent, int position, FollowBean bean) {
+            public View getView(FlowLayout parent, int position, ProfileHeadInfo bean) {
                 TextView tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.flowlayout_tv,
                         mFl, false);
                 tv.setText("@"+bean.getName());
@@ -69,20 +77,48 @@ public class SelectAtPersonActivity extends BaseActivity {
         mFollowRvAdapter = new FollowRvAdapter(mContext, new ArrayList<>());
         mRvFollow.setAdapter(mFollowRvAdapter);
 
+        mEtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String content = s.toString().trim();
+                if(TextUtils.isEmpty(content)){
+                    mFollowRvAdapter.setDatas(mRsData);
+                }else {
+                    List<ProfileHeadInfo> infos = new ArrayList<>();
+                    for(ProfileHeadInfo info :mRsData){
+                        if(info.getName().contains(content)){
+                            infos.add(info);
+                        }
+                    }
+                    mFollowRvAdapter.setDatas(infos);
+                }
+            }
+        });
+
         initViewModel();
 
     }
 
     private void initViewModel() {
         mUserInfoViewModel = ViewModelProviders.of(this).get(UserInfoViewModel.class);
-        mUserInfoViewModel.getFollowListResult().observe(this, result -> {
+        mUserInfoViewModel.getFollowerListResult().observe(this, result -> {
             if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
-                List<FollowBean> rsData = result.getRsData();
-                mFollowRvAdapter.setDatas(rsData);
+                mRsData = result.getRsData();
+                mFollowRvAdapter.setDatas(mRsData);
             }
         });
 
-        mUserInfoViewModel.getFollowList(NetConstant.SKIP,NetConstant.TAKE);
+        mUserInfoViewModel.getFollowerList(NetConstant.SKIP,NetConstant.TAKE);
     }
 
 
@@ -99,11 +135,7 @@ public class SelectAtPersonActivity extends BaseActivity {
     }
 
     private void complete() {
-        String result = "";
-        for (FollowBean bean : mList){
-            result = result.concat("@").concat(bean.getName()).concat(" ");
-        }
-        EventBus.getDefault().post(new SelectCompleteEvent(result));
+        EventBus.getDefault().post(new SelectCompleteEvent(mList));
         finish();
     }
 
@@ -118,6 +150,14 @@ public class SelectAtPersonActivity extends BaseActivity {
             mList.add(event.bean);
             mTagAdapter.notifyDataChanged();
             mTvComplete.setText("完成" + mList.size());
+        }else {
+            mList.remove(event.bean);
+            mTagAdapter.notifyDataChanged();
+            if(mList.size()==0){
+                mTvComplete.setText("完成");
+            }else {
+                mTvComplete.setText("完成" + mList.size());
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import com.example.nativetest.ConversationListActivity;
 import com.example.nativetest.R;
 import com.example.nativetest.ChatFragment;
 import com.example.nativetest.event.CitySelectEvent;
+import com.example.nativetest.event.ItemCommentEvent;
 import com.example.nativetest.event.ShowMoreEvent;
 import com.example.nativetest.ui.fragment.MainFragment;
 import com.example.nativetest.ui.fragment.TwoFragment;
@@ -42,6 +43,31 @@ public class MainActivity extends BaseActivity {
     private boolean showPop;
     private ChatTipsPop mPop;
 
+    protected List<View> touchViews = new ArrayList<>();
+
+//    protected List<View> getExcludeTouchHideInputViews(){
+//        if(mChatFragment!=null){
+//            if(mChatFragment.getCommentFragment()!=null){
+//                if(mChatFragment.getCommentFragment().getLlInput()!=null&&mChatFragment.getCommentFragment().getLlInput().getVisibility()==View.VISIBLE){
+//                    if(touchViews.size()==0){
+//                        touchViews.add(mChatFragment.getCommentFragment().getLlInput());
+//                    }
+//                    return touchViews;
+//                }
+//            }
+//        }
+//        return null;
+//    }
+//    protected void hideInput() {
+//        if(mChatFragment!=null){
+//            if(mChatFragment.getCommentFragment()!=null){
+//                if(mChatFragment.getCommentFragment().getLlInput()!=null&&mChatFragment.getCommentFragment().getLlInput().getVisibility()==View.VISIBLE){
+//                    mChatFragment.getCommentFragment().getLlInput().setVisibility(View.GONE);
+//                }
+//            }
+//        }
+//
+//    }
     /**
      * tab 项枚举
      */
@@ -249,16 +275,8 @@ public class MainActivity extends BaseActivity {
             }, 3000);
         }
     }
-
-
-//    /**
-//     * 显示键盘
-//     *
-//     */
-//    public void showInput() {
-//        mEtInput.requestFocus();
-//        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//        imm.showSoftInput(mEtInput, InputMethodManager.SHOW_IMPLICIT);
-//    }
+    protected void onKeyBoardChange(boolean isPopup){
+        mTgBottomTabs.setVisibility(isPopup?View.GONE:View.VISIBLE);
+    }
 
 }

@@ -58,12 +58,12 @@ public class VipItemView extends LinearLayout {
             array.recycle();
         }
 
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIvRight.setSelected(!mIvRight.isSelected());
-            }
-        });
+//        this.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mIvRight.setSelected(!mIvRight.isSelected());
+//            }
+//        });
     }
 
 }

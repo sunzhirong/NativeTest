@@ -146,6 +146,10 @@
         </activity>
         <activity android:name=".ui.activity.FriendsRequestListActivity" />
         <activity android:name=".ui.activity.SelectAtPersonActivity" />
+        <activity android:name=".ui.activity.MyLikedActivity" />
+        <activity android:name=".tesstActivity" />
+        <activity android:name=".TestActivity1" />
+        <activity android:name=".ui.activity.SelectGoupMemberActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -5,6 +5,10 @@ import com.example.nativetest.db.model.ProfileHeadInfo;
 import com.example.nativetest.db.model.ProfileInfo;
 import com.example.nativetest.model.CommentBean;
 import com.example.nativetest.model.FollowBean;
+import com.example.nativetest.model.FollowRequestInfo;
+import com.example.nativetest.model.FriendInfo;
+import com.example.nativetest.model.VIPCheckBean;
+import com.example.nativetest.model.VIPConfigBean;
 import com.example.nativetest.model.sc.NetResponse;
 import com.example.nativetest.model.Result;
 import com.example.nativetest.model.sc.UserInfo;
@@ -80,8 +84,36 @@ public interface ScUserService {
 
     @POST(ScUrl.FOLLOWERS_REQUEST_LIST)
     @Headers(NetConstant.JSON)
-    LiveData<Result<List<ProfileHeadInfo>>> getFollowerRequestList(@Body RequestBody body);
+    LiveData<Result<List<FollowRequestInfo>>> getFollowerRequestList(@Body RequestBody body);
 
+
+    @POST(ScUrl.FOLLOWINGS_ADD)
+    @Headers(NetConstant.JSON)
+    LiveData<Result<Boolean>> addFollowings(@Body RequestBody body);
+
+    @POST(ScUrl.FOLLOWINGS_REMOVE)
+    @Headers(NetConstant.JSON)
+    LiveData<Result<Boolean>> removeFollowings(@Body RequestBody body);
+
+
+    @POST(ScUrl.CMT_ADD)
+    @Headers(NetConstant.JSON)
+    LiveData<Result<Integer>> cmtAdd(@Body RequestBody body);
+
+
+    @POST(ScUrl.VIP_CHECK)
+    @Headers(NetConstant.JSON)
+    LiveData<Result<VIPCheckBean>> vipCheck();
+
+
+    @POST(ScUrl.VIP_INFO)
+    @Headers(NetConstant.JSON)
+    LiveData<Result<List<VIPConfigBean>>> vipInfo();
+
+
+    @POST(ScUrl.GET_FRIEND_LIST)
+    @Headers(NetConstant.JSON)
+    LiveData<Result<List<FriendInfo>>> getFriendList(@Body RequestBody body);
 
 
 }

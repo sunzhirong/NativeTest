@@ -1,24 +1,25 @@
 package com.example.nativetest.task;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
-import android.text.TextUtils;
+import android.provider.MediaStore;
 
 import com.alibaba.fastjson.JSON;
 import com.example.nativetest.ProfileUtils;
-import com.example.nativetest.db.dao.UserDao;
 import com.example.nativetest.db.model.ProfileHeadInfo;
 import com.example.nativetest.db.model.ProfileInfo;
+import com.example.nativetest.model.CommentAtReq;
 import com.example.nativetest.model.CommentBean;
 import com.example.nativetest.model.FollowBean;
-import com.example.nativetest.model.IMTokenBean;
+import com.example.nativetest.model.FollowRequestInfo;
+import com.example.nativetest.model.FriendInfo;
+import com.example.nativetest.model.GroupDataReq;
 import com.example.nativetest.model.Resource;
 import com.example.nativetest.model.Result;
-import com.example.nativetest.model.sc.NetResponse;
+import com.example.nativetest.model.VIPConfigBean;
 import com.example.nativetest.model.sc.TokenBean;
-import com.example.nativetest.model.sc.UserInfo;
 import com.example.nativetest.net.HttpClientManager;
-import com.example.nativetest.net.NetworkBoundResource;
 import com.example.nativetest.net.NetworkOnlyResource;
 import com.example.nativetest.net.RetrofitUtil;
 import com.example.nativetest.net.ScInterceptor;
@@ -27,9 +28,7 @@ import com.example.nativetest.net.service.ScUserService;
 import com.example.nativetest.net.service.TokenService;
 import com.example.nativetest.net.service.UploadService;
 import com.example.nativetest.net.token.TokenHttpClientManager;
-import com.example.nativetest.net.token.TokenRetrofitClient;
 import com.example.nativetest.net.upload.UploadHttpClientManager;
-import com.example.nativetest.sp.UserCache;
 import com.example.nativetest.utils.log.SLog;
 
 import java.io.File;
@@ -39,7 +38,6 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -131,7 +129,7 @@ public class UserTask {
         HashMap<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("PhoneNumber", "13305938755");
         paramsMap.put("PhoneCountry", "86");
-        RequestBody body = RetrofitUtil.getRequestBody(paramsMap);
+        RequestBody body = RetrofitUtil.createJsonRequest(paramsMap);
         return scUserService.getSms(body);
     }
 
@@ -140,7 +138,7 @@ public class UserTask {
         paramsMap.put("PhoneNumber", "13305938755");
         paramsMap.put("PhoneCountry", "86");
         paramsMap.put("VCode", "9999");
-        RequestBody body = RetrofitUtil.getRequestBody(paramsMap);
+        RequestBody body = RetrofitUtil.createJsonRequest(paramsMap);
         return scUserService.verifyCode(body);
     }
 
@@ -148,7 +146,6 @@ public class UserTask {
         HashMap<String, String> paramsMap = new HashMap<>();
         paramsMap.put("grant_type", "password");
         paramsMap.put("scope", "jjApiScope");
-
         paramsMap.put("UserName", "13305938755");
         paramsMap.put("Password", ScInterceptor.getDV()+"9999");
         paramsMap.put("VCode", "9999");
@@ -241,29 +238,47 @@ public class UserTask {
         }.asLiveData();
     }
 
+    /**
+     * 获取本地文件真实 uri
+     *
+     * @param contentUri
+     * @return
+     */
+    public String getRealPathFromUri(Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
-
-    public LiveData<Resource<String>> upload(String imgPath){
+    public LiveData<Resource<String>> upload(Uri uri){
         return new NetworkOnlyResource<String, Result<String>>() {
 
             @NonNull
             @Override
             protected LiveData<Result<String>> createCall() {
-//                Map<String, RequestBody> map = new HashMap<>();
-//                File frontFile = new File(imgPath);
-//                map.put("idCardFile1" + "\";+filename=\"" + frontFile.getName(), RequestBody.create(MediaType.parse("image/png"), frontFile));
 
+                File uploadFile = new File(uri.getPath());
+                if (!uploadFile.exists()) {
+                    uploadFile = new File(getRealPathFromUri(uri));
+                }
 
-                File file = new File(imgPath);
-                RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-                MultipartBody.Part part =  MultipartBody.Part.createFormData("uploadFile",file.getPath(), imageBody);
+                RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), uploadFile);
+                MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);//表单类型
+                builder.addFormDataPart("uploadFile", uploadFile.getPath(), imageBody);//imgfile 后台接收图片流的参数名
 
-//                MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);//表单类型
-//                builder.addFormDataPart("uploadFile", file.getPath(), imageBody);//imgfile 后台接收图片流的参数名
-//                List<MultipartBody.Part> parts = builder.build().parts();
-                SLog.e("niko", JSON.toJSONString(part));
-//                return uploadService.uploadAvatar(parts);
-                return scUserService.uploadAvatar(part);
+                List<MultipartBody.Part> parts = builder.build().parts();
+                SLog.e("niko",JSON.toJSONString(imageBody)+"--"+JSON.toJSONString(uploadFile));
+
+                return uploadService.uploadAvatar(parts);
             }
         }.asLiveData();
     }
@@ -275,7 +290,7 @@ public class UserTask {
         paramsMap.put("Skip", skip);
         paramsMap.put("Take", take);
         paramsMap.put("Data", 0);
-        RequestBody requestBody = RetrofitUtil.getRequestBody(paramsMap);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
         return scUserService.getCommentList(requestBody);
     }
 
@@ -284,7 +299,7 @@ public class UserTask {
         paramsMap.put("Skip", skip);
         paramsMap.put("Take", take);
         paramsMap.put("Data", 0);
-        RequestBody requestBody = RetrofitUtil.getRequestBody(paramsMap);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
         return scUserService.getFollowList(requestBody);
     }
 
@@ -293,8 +308,61 @@ public class UserTask {
         paramsMap.put("Skip", skip);
         paramsMap.put("Take", take);
         paramsMap.put("Data", 0);
-        RequestBody requestBody = RetrofitUtil.getRequestBody(paramsMap);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
         return scUserService.getFollowerList(requestBody);
+    }
+
+
+
+    public LiveData<Result<List<FollowRequestInfo>>> getFollowerRequestList(int skip, int take){
+        HashMap<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("Skip", skip);
+        paramsMap.put("Take", take);
+        paramsMap.put("Data", 0);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
+        return scUserService.getFollowerRequestList(requestBody);
+    }
+
+
+    public LiveData<Result<Boolean>> addFollowings(int uid){
+        HashMap<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("Data", 0);
+        paramsMap.put("UID", uid);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
+        return scUserService.addFollowings(requestBody);
+    }
+
+    public LiveData<Result<Boolean>> removeFollowings(int uid){
+        HashMap<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("Data", 0);
+        paramsMap.put("UID", uid);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
+        return scUserService.removeFollowings(requestBody);
+    }
+
+
+    public LiveData<Result<Integer>> cmtAdd(CommentAtReq data){
+        HashMap<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("Data", data);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
+        return scUserService.cmtAdd(requestBody);
+    }
+
+
+    public LiveData<Result<Integer>> createGroup(GroupDataReq data){
+        HashMap<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("Data", data);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
+        return scIMService.createGroup(requestBody);
+    }
+
+    public LiveData<Result<List<FriendInfo>>> getFriendList(int skip, int take){
+        HashMap<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("Skip", skip);
+        paramsMap.put("Take", take);
+        paramsMap.put("Data", 0);
+        RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
+        return scUserService.getFriendList(requestBody);
     }
 
 

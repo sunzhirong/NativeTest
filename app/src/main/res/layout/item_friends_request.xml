@@ -19,6 +19,7 @@
         app:RCShape="circle" />
 
     <LinearLayout
+        android:gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="0dp"
@@ -26,18 +27,33 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:text="翟晓萌关注了你"
-            style="@style/tv16BlackStyle"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:textSize="15sp"
+                android:id="@+id/name"
+                style="@style/tv16BlackStyle"/>
+            <TextView
+                android:textSize="15sp"
+                android:text="关注了你"
+                android:textColor="@color/grayA"
+                style="@style/tv16BlackStyle"/>
+
+        </LinearLayout>
+
 
         <TextView
-
-            android:text="留言：感觉你对中国文艺的电影非常有见解，希望能和你交流。"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:id="@+id/msg"
             style="@style/tv13GrayBStyle"/>
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_follow"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="4dp"

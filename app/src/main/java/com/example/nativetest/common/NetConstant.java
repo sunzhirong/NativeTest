@@ -26,6 +26,8 @@ public class NetConstant {
 
 
     public final static int SKIP = 0;
-    public final static int TAKE = 0;
+    public final static int TAKE = 1000;
+
+    public static String IMG_URL = "https://ttmedia.alilusions.com/";
 
 }

@@ -34,6 +34,7 @@
 
 
           <TextView
+              android:id="@+id/tv_delete"
               android:textSize="12sp"
               android:text="取消好友"
              style="@style/tv16WhiteStyle"/>
@@ -47,12 +48,25 @@
             android:background="#ffffff">
 
             <io.rong.imkit.widget.AsyncImageView
+
                 android:layout_gravity="center_vertical"
-                android:id="@+id/rc_left"
+                android:id="@+id/rc_user_portrait"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 app:RCDefDrawable="@drawable/rc_ic_def_msg_portrait"
                 app:RCShape="circle" />
+
+            <TextView
+                android:id="@+id/rc_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:lines="1"
+                android:ellipsize="end"
+                android:maxLength="32"
+                android:layout_marginLeft="12dp"
+                android:textColor="#353535"
+                android:textSize="16sp" />
         </LinearLayout>
     </com.daimajia.swipe.SwipeLayout>
 

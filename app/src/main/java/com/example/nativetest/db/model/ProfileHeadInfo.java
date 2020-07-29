@@ -1,5 +1,7 @@
 package com.example.nativetest.db.model;
 
+import java.util.Objects;
+
 public class ProfileHeadInfo {
         /**
          * UID : 0
@@ -8,6 +10,8 @@ public class ProfileHeadInfo {
          * UserIcon : string
          * Gender : true
          */
+
+
 
         private int UID;
         private String Name;
@@ -55,4 +59,20 @@ public class ProfileHeadInfo {
             this.Gender = Gender;
         }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProfileHeadInfo info = (ProfileHeadInfo) o;
+        return UID == info.UID &&
+                Gender == info.Gender &&
+                Objects.equals(Name, info.Name) &&
+                Objects.equals(NameColor, info.NameColor) &&
+                Objects.equals(UserIcon, info.UserIcon);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(UID, Name, NameColor, UserIcon, Gender);
+    }
 }

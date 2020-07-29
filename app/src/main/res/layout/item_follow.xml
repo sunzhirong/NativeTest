@@ -10,6 +10,8 @@
     android:paddingBottom="6dp"
     android:orientation="horizontal">
 
+
+
     <io.rong.imkit.widget.AsyncImageView
         android:layout_gravity="center_vertical"
         android:id="@+id/rc_left"

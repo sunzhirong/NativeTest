@@ -4,14 +4,18 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.example.nativetest.R;
+import com.example.nativetest.event.ItemCommentEvent;
+import com.example.nativetest.model.CommentBean;
 import com.example.nativetest.ui.activity.SelectAtPersonActivity;
 import com.example.nativetest.ui.adapter.BaseItemView;
+import com.example.nativetest.utils.glideutils.GlideImageLoaderUtil;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -29,8 +33,8 @@ public class ItemComment extends BaseItemView {
     AppCompatTextView mTvContent;
     @BindView(R.id.iv_right)
     AppCompatImageView mIvRight;
-    @BindView(R.id.et_input)
-    EditText mEtInput;
+    private CommentBean commentBean;
+
 
     public ItemComment(Context context) {
         super(context);
@@ -47,43 +51,47 @@ public class ItemComment extends BaseItemView {
 
     @Override
     protected void initView() {
-        mEtInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(String.valueOf(s).equals("@")){
-                    readyGo(SelectAtPersonActivity.class);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
     }
 
-    public void bindData() {
-        //文案效果1  多色效果  可以一个标签标签使用
-        Spanned strA = Html.fromHtml("<font color=#65666C>" + "Frank Oliver评论了你的动态：" + "</font>" + "<font color=#0A0A0B>" + "你的照片风格很有个性" + "<font color=#65666C>" + "4-10");
+    public void bindData(CommentBean commentBean) {
+        this.commentBean = commentBean;
+        GlideImageLoaderUtil.loadCircleImage(mContext,mIvLeft,commentBean.getUserHead().getUserIcon());
+        GlideImageLoaderUtil.loadRoundImg(mContext,mIvRight,commentBean.getMdGuid(),10);
+
+
+        String type = "",msg = commentBean.getMsg(),date= commentBean.getUtc();
+        if(!TextUtils.isEmpty(date)&&date.length()>10){
+            date = date.substring(5,10);
+        }
+        String name = commentBean.getUserHead().getName();
+        if(commentBean.getTUID() == 0 && commentBean.getAtUID() == 0){
+            //别人评论你
+            type = name+"评论了你的动态：";
+        }else if(commentBean.getTUID()>0){
+            //别人回复你
+            type = name+"回复了你的评论：";
+        }else if(commentBean.getAtUID() > 0){
+            //别人@你
+            type = name+"在评论中@了你";
+            Spanned strA = Html.fromHtml("<font color=#65666C>" + type + "</font>");
+            mTvContent.setText(strA);
+            return;
+        }
+
+
+        Spanned strA = Html.fromHtml("<font color=#65666C>" + type +
+                "</font>" + "<font color=#0A0A0B>" + msg + "<font color=#65666C>"
+                + "  "+date+"</font>" );
         mTvContent.setText(strA);
+
+
     }
 
     @OnClick(R.id.ll_container)
     public void onViewClicked() {
-        showInput();
+        EventBus.getDefault().post(new ItemCommentEvent(commentBean));
     }
 
-    /**
-     * 显示键盘
-     *
-     */
-    public void showInput() {
-        mEtInput.requestFocus();
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mEtInput, InputMethodManager.SHOW_IMPLICIT);
-    }
+
 }

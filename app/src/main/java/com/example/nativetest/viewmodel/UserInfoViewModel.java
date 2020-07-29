@@ -1,23 +1,26 @@
 package com.example.nativetest.viewmodel;
 
 import android.app.Application;
+import android.net.Uri;
 
 import com.example.nativetest.db.model.ProfileHeadInfo;
 import com.example.nativetest.db.model.ProfileInfo;
+import com.example.nativetest.model.CommentAtReq;
 import com.example.nativetest.model.CommentBean;
 import com.example.nativetest.model.FollowBean;
+import com.example.nativetest.model.FollowRequestInfo;
+import com.example.nativetest.model.FriendInfo;
+import com.example.nativetest.model.GroupDataReq;
 import com.example.nativetest.model.Resource;
 import com.example.nativetest.model.Result;
 import com.example.nativetest.sp.ProfileCache;
 import com.example.nativetest.task.UserTask;
 import com.example.nativetest.utils.SingleSourceLiveData;
-import com.example.nativetest.utils.SingleSourceMapLiveData;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 public class UserInfoViewModel extends AndroidViewModel {
 
@@ -32,6 +35,15 @@ public class UserInfoViewModel extends AndroidViewModel {
     private SingleSourceLiveData<Result<List<CommentBean>>> commentResult =  new SingleSourceLiveData<>();
     private SingleSourceLiveData<Result<List<FollowBean>>> followResult =  new SingleSourceLiveData<>();
     private SingleSourceLiveData<Result<List<ProfileHeadInfo>>> followerListResult =  new SingleSourceLiveData<>();
+    private SingleSourceLiveData<Result<List<FollowRequestInfo>>> getFollowerRequestListResult =  new SingleSourceLiveData<>();
+    private SingleSourceLiveData<Result<Boolean>> addFollowingsResult =  new SingleSourceLiveData<>();
+    private SingleSourceLiveData<Result<Boolean>> removeFollowingsResult =  new SingleSourceLiveData<>();
+    private SingleSourceLiveData<Result<Integer>> cmtAddResult =  new SingleSourceLiveData<>();
+    private SingleSourceLiveData<Result<Integer>> createGroupResult =  new SingleSourceLiveData<>();
+    private SingleSourceLiveData<Result<List<FriendInfo>>> getFriendListResult =  new SingleSourceLiveData<>();
+
+
+
 
     public UserInfoViewModel(@NonNull Application application) {
         super(application);
@@ -78,8 +90,8 @@ public class UserInfoViewModel extends AndroidViewModel {
 
 
 
-    public void uploadAvatar(String imgPath ){
-        uploadResult.setSource(userTask.upload(imgPath));
+    public void uploadAvatar(Uri uri ){
+        uploadResult.setSource(userTask.upload(uri));
     }
 
     public SingleSourceLiveData<Resource<String>> getUploadResult(){
@@ -110,6 +122,60 @@ public class UserInfoViewModel extends AndroidViewModel {
     public SingleSourceLiveData<Result<List<ProfileHeadInfo>>> getFollowerListResult() {
         return followerListResult;
     }
+
+    public void getFollowerRequestList(int skip,int take){
+        getFollowerRequestListResult.setSource(userTask.getFollowerRequestList(skip,take));
+    }
+
+    public SingleSourceLiveData<Result<List<FollowRequestInfo>>> getFollowerRequestListResult() {
+        return getFollowerRequestListResult;
+    }
+
+    public void addFollowings(int uid){
+        addFollowingsResult.setSource(userTask.addFollowings(uid));
+    }
+
+    public SingleSourceLiveData<Result<Boolean>> getAddFollowingsResult() {
+        return addFollowingsResult;
+    }
+
+    public void removeFollowings(int uid){
+        removeFollowingsResult.setSource(userTask.removeFollowings(uid));
+    }
+
+    public SingleSourceLiveData<Result<Boolean>> getRemoveFollowingsResult() {
+        return removeFollowingsResult;
+    }
+
+    public void cmtAdd(CommentAtReq data){
+        cmtAddResult.setSource(userTask.cmtAdd(data));
+    }
+
+    public SingleSourceLiveData<Result<Integer>> getCmtAddResult() {
+        return cmtAddResult;
+    }
+
+
+    public void createGroup(GroupDataReq data){
+        createGroupResult.setSource(userTask.createGroup(data));
+    }
+
+    public SingleSourceLiveData<Result<Integer>> getCreateGroupResult() {
+        return createGroupResult;
+    }
+
+
+
+    public void getFriendList(int skip,int take){
+        getFriendListResult.setSource(userTask.getFriendList(skip,take));
+    }
+
+    public SingleSourceLiveData<Result<List<FriendInfo>>> getFriendListResult() {
+        return getFriendListResult;
+    }
+
+
+
 
 
 

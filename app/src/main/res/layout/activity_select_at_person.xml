@@ -58,6 +58,7 @@
     </RelativeLayout>
 
     <EditText
+        android:id="@+id/et_search"
         android:hint="找不到搜索试试"
         style="@style/searchEtStyle"/>
     

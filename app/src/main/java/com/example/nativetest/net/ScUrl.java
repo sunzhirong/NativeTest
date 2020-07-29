@@ -9,11 +9,19 @@ public class ScUrl {
     public static final String PROFILE_GET = "api/ScUser/ProfileGet";
     public static final String PROFILE_UPDATE = "api/ScUser/ProfileUpdate";
     public static final String LOG_OUT = "/api/ScUser/Logout";
-    public static final String COMMENTS_LIST = "/api/ScMoment/CommentsCenter";
-    public static final String FOLLOWING_LIST = "/api/ScUser/FollowingsList";
+    public static final String COMMENTS_LIST = "/api/ScMoment/CommentsCenter";//评论列表
+    public static final String CMT_ADD = "/api/ScMoment/CmtAdd";//回复评论
+    public static final String FOLLOWING_LIST = "/api/ScUser/FollowingsList";//选择@的人
     public static final String FOLLOWERS_LIST = "/api/ScUser/FollowersList";//通讯录
     public static final String FOLLOWERS_REQUEST_LIST = "/api/ScUser/FollowersListDetail";//好友请求
+    public static final String FOLLOWINGS_REMOVE = "/api/ScUser/FollowingsRemove";//取消好友
+    public static final String FOLLOWINGS_ADD = "/api/ScUser/FollowingsAdd";//添加关注
 
+
+    public static final String GET_FRIEND_LIST ="/api/ScUser/FriendsList";//创建群的好友列表 以及通讯录
+
+    public static final String VIP_CHECK = "/api/ScUser/VIPCheck";//VIP界面获取相关信息
+    public static final String VIP_INFO = "/api/ScSocial/VIPCfgInfo";//获取VIP设置列表
 
 
 
@@ -23,6 +31,7 @@ public class ScUrl {
 
 
     public static final String GET_IM_TOKEN = "/api/ScIM/GetImUserToken";
+    public static final String CREATE_GROUP = "/api/ScIM/GroupChatStart";
 
 
 

@@ -3,15 +3,26 @@ package com.example.nativetest.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.example.nativetest.BaseFragment;
 import com.example.nativetest.R;
 import com.example.nativetest.common.NetConstant;
+import com.example.nativetest.db.model.ProfileHeadInfo;
+import com.example.nativetest.event.ItemCommentEvent;
 import com.example.nativetest.event.SelectCompleteEvent;
+import com.example.nativetest.model.CommentAtReq;
 import com.example.nativetest.model.CommentBean;
+import com.example.nativetest.ui.activity.SelectAtPersonActivity;
 import com.example.nativetest.ui.adapter.CommentRvAdapter;
+import com.example.nativetest.utils.ToastUtils;
 import com.example.nativetest.utils.log.SLog;
 import com.example.nativetest.viewmodel.UserInfoViewModel;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -27,7 +38,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
+import butterknife.OnClick;
 import io.rong.eventbus.EventBus;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 @SuppressLint("ValidFragment")
@@ -39,9 +53,18 @@ public class CommentFragment extends BaseFragment {
     RecyclerView mRvComment;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
+    @BindView(R.id.et_input)
+    EditText mEtInput;
+    @BindView(R.id.ll_input)
+    LinearLayout mLlInput;
     private int position = 0;
     private UserInfoViewModel mUserInfoViewModel;
     private CommentRvAdapter mCommentRvAdapter;
+    private CommentBean mCommentBean;
+
+    public LinearLayout getLlInput(){
+        return mLlInput;
+    }
 
     public static CommentFragment getInstance(int position) {
         CommentFragment sf = new CommentFragment();
@@ -66,13 +89,14 @@ public class CommentFragment extends BaseFragment {
         EventBus.getDefault().register(this);
         mRvComment.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mCommentRvAdapter = new CommentRvAdapter(getContext(), new ArrayList<>());
+        List<CommentBean> commentBeans = new ArrayList<>();
+        mCommentRvAdapter = new CommentRvAdapter(getContext(), commentBeans);
         mRvComment.setAdapter(mCommentRvAdapter);
 
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
+                mUserInfoViewModel.getCommentList(NetConstant.SKIP, NetConstant.TAKE);
             }
         });
         mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -81,27 +105,100 @@ public class CommentFragment extends BaseFragment {
 
             }
         });
+
+        mEtInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                SLog.e("input", s + "start = " + start + "before = " + before + "count = " + count);
+                if (!TextUtils.isEmpty(s.toString()) && String.valueOf(s.charAt(s.length() - 1)).equals("@") && before == 0) {
+                    readyGo(SelectAtPersonActivity.class);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mEtInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                onSubmit();
+            }
+            return false;
+        });
     }
 
     @Override
     protected void onInitViewModel() {
         mUserInfoViewModel = ViewModelProviders.of(this).get(UserInfoViewModel.class);
         mUserInfoViewModel.getCommentListResult().observe(this, result -> {
-            if(result.RsCode == NetConstant.REQUEST_SUCCESS_CODE){
+            if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
                 List<CommentBean> rsData = result.RsData;
                 mCommentRvAdapter.setDatas(rsData);
             }
-        } );
-        mUserInfoViewModel.getCommentList(NetConstant.SKIP,NetConstant.TAKE);
+            mRefreshLayout.finishRefresh();
+        });
+        mUserInfoViewModel.getCommentList(NetConstant.SKIP, NetConstant.TAKE);
+
+        mUserInfoViewModel.getCmtAddResult().observe(this, result -> {
+            if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
+                mCommentBean = null;
+                hideKeyboard(mEtInput);
+                mLlInput.setVisibility(View.GONE);
+                ToastUtils.showToast("已回复评论");
+                mEtInput.setText("");
+            }
+
+        });
     }
 
     public void onEventMainThread(SelectCompleteEvent event) {
-        SLog.e("niko",event.name);
+        String result = "";
+        for (ProfileHeadInfo bean : event.list){
+            result = result.concat("@").concat(bean.getName()).concat(" ");
+        }
+        SLog.e("niko", result);
+        mEtInput.setText(mEtInput.getText()+result);
+        mEtInput.setSelection(mEtInput.getText().toString().length());
     }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+
+    public void onEventMainThread(ItemCommentEvent event) {
+        mCommentBean = event.getCommentBean();
+        mEtInput.setText("");
+        mLlInput.setVisibility(View.VISIBLE);
+        mEtInput.setHint("回复：" + mCommentBean.getUserHead().getName());
+        showInput();
+    }
+
+    public void showInput() {
+        mEtInput.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mEtInput, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @OnClick(R.id.btn_submit)
+    public void onSubmit() {
+        CommentAtReq commentAtBean = new CommentAtReq();
+        commentAtBean.setMmID(mCommentBean.getMmID());
+        String msg = mEtInput.getText().toString().trim();
+        commentAtBean.setMsg(msg);
+        commentAtBean.setTCmID(mCommentBean.getCmID());
+        List<CommentAtReq.AtUIDsBean> atUIDsBeans = new ArrayList<>();
+        commentAtBean.setAtUIDs(atUIDsBeans);
+        mUserInfoViewModel.cmtAdd( commentAtBean);
     }
 }

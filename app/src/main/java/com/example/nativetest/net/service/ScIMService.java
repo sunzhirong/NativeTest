@@ -10,6 +10,7 @@ import java.util.Map;
 
 import androidx.lifecycle.LiveData;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -19,4 +20,11 @@ public interface ScIMService {
     @POST(ScUrl.GET_IM_TOKEN)
     @Headers(NetConstant.JSON)
     LiveData<Result<String>> getIMToken();
+
+
+
+    @POST(ScUrl.CREATE_GROUP)
+    @Headers(NetConstant.JSON)
+    LiveData<Result<Integer>> createGroup(@Body RequestBody body);
+
 }

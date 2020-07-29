@@ -23,10 +23,19 @@ public class CommentBean {
     private int CmID;
     private String Msg;
     private String Utc;
+    private String MdGuid;
     private int UID;
     private int TUID;
     private int GCmID;
     private int AtUID;
+
+    public String getMdGuid() {
+        return MdGuid;
+    }
+
+    public void setMdGuid(String mdGuid) {
+        MdGuid = mdGuid;
+    }
 
     public int getMmID() {
         return MmID;

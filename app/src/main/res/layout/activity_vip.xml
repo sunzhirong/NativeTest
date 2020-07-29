@@ -25,7 +25,8 @@
                 android:id="@+id/iv_avatar"
                 android:layout_width="@dimen/dp_48"
                 android:layout_height="@dimen/dp_48"
-                android:background="@drawable/img_setting_contact" />
+               />
+
 
 
             <LinearLayout
@@ -141,6 +142,7 @@
                     android:layout_weight="1"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:visibility="gone"
                     android:id="@+id/tv_use"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
@@ -193,7 +195,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_marginTop="@dimen/dp_5"
-            android:textColor="@color/graya"
+            android:textColor="@color/grayA"
             android:text="完成其中一种方式自动延长一个月"
             android:textSize="@dimen/sp_11"
             android:layout_width="wrap_content"
@@ -239,15 +241,36 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_share"
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_80"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:text="分享"
-            android:layout_width="@dimen/dp_160"
-            android:layout_height="@dimen/dp_35"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+
+            <TextView
+                android:id="@+id/tv_code"
+                android:background="@drawable/vip_bottom_left"
+                android:textColor="@color/blackA"
+                android:text="邀请码："
+                android:gravity="center"
+                android:textSize="14sp"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/tv_copy"
+                android:gravity="center"
+                android:background="@drawable/vip_bottom_right"
+                android:text="复制分享"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+
+
+
+        </LinearLayout>
 
     </LinearLayout>
 

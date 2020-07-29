@@ -1,18 +1,25 @@
 package com.example.nativetest.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import com.example.nativetest.ProfileUtils;
 import com.example.nativetest.R;
+import com.example.nativetest.event.NicknameColorSelectEvent;
+import com.example.nativetest.model.VIPConfigBean;
 import com.example.nativetest.ui.adapter.BaseItemView;
 import com.example.nativetest.ui.adapter.NicknameRvAdapter;
+import com.example.nativetest.utils.glideutils.GlideImageLoaderUtil;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.rong.callkit.util.GlideUtils;
+import io.rong.eventbus.EventBus;
 
 public class SelectNicknameItemView extends BaseItemView {
 
@@ -28,8 +35,11 @@ public class SelectNicknameItemView extends BaseItemView {
     AppCompatImageView mIvSelect;
     @BindView(R.id.rl_right)
     RelativeLayout mRlRight;
+    @BindView(R.id.iv_right)
+    AppCompatImageView mIvRight;
     @BindView(R.id.cv_container)
     CardView mCvContainer;
+    private int position;
 
     public SelectNicknameItemView(Context context) {
         super(context);
@@ -46,14 +56,18 @@ public class SelectNicknameItemView extends BaseItemView {
 
     @OnClick(R.id.cv_container)
     public void onViewClicked() {
-        mIvSelect.setSelected(!mIvSelect.isSelected());
+//        mIvSelect.setSelected(!mIvSelect.isSelected());
+        EventBus.getDefault().post(new NicknameColorSelectEvent(!mIvSelect.isSelected(),position));
     }
 
-    public void bindData(NicknameRvAdapter.NickNameBean nickNameBean) {
-        mRlLeft.setBackgroundColor(getResources().getColor(nickNameBean.color));
-        mRlRight.setBackground(getResources().getDrawable(nickNameBean.src));
-        mTvColor.setText(nickNameBean.colorname);
-        mTvName.setTextColor(getResources().getColor(nickNameBean.color));
-//        mIvAvatar.setBackground(getResources().getDrawable(nickNameBean.avatarSrc));
+    public void bindData(VIPConfigBean bean, int position) {
+        this.position = position;
+        mRlLeft.setBackgroundColor(Color.parseColor("#"+bean.getNameColor()));
+        GlideImageLoaderUtil.loadImage(mContext,mIvRight,bean.getImgMdGuid());
+        mTvColor.setText(bean.getTitle());
+        mTvName.setTextColor(Color.parseColor("#"+bean.getNameColor()));
+        mTvName.setText(ProfileUtils.sProfileInfo.getHead().getName());
+        GlideImageLoaderUtil.loadCircleImage(mContext,mIvAvatar, ProfileUtils.sProfileInfo.getHead().getUserIcon());
+        mIvSelect.setSelected(bean.isSelect());
     }
 }

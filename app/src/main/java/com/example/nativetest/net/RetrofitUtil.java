@@ -27,12 +27,7 @@ public class RetrofitUtil {
         return RequestBody.create(MEDIA_TYPE_JSON,jsonStr);
     }
 
-    public static RequestBody getRequestBody(Object obj){
-        String jsonStr = JSONObject.toJSONString(obj);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("Content-Type, application/json"), jsonStr);
-        Log.e("retrofit RequestBody",jsonStr);
-        return requestBody;
-    }
+
 
     /**
      * 转换为 form-data

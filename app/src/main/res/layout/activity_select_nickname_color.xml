@@ -18,6 +18,7 @@
         android:layout_weight="1"/>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_submit"
         android:textStyle="bold"
         android:gravity="center"
         android:textColor="@color/white"

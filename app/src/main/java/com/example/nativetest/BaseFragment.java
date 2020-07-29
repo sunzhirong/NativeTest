@@ -1,14 +1,17 @@
 package com.example.nativetest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.nativetest.utils.ToastUtils;
 import com.example.nativetest.widget.LoadingDialog;
+import com.gyf.immersionbar.ImmersionBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -254,5 +257,17 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void readyGo(Class<?> clazz) {
         readyGo(clazz, null);
     }
+
+    /**
+     * 隐藏键盘
+     */
+    protected   void hideKeyboard(View v) {
+        InputMethodManager imm = ( InputMethodManager ) v.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+        if ( imm.isActive( ) ) {
+            imm.hideSoftInputFromWindow( v.getApplicationWindowToken( ) , 0 );
+
+        }
+    }
+
 
 }

@@ -13,20 +13,16 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <EditText
-            android:id="@+id/et_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:background="@color/blackA"
             android:layout_gravity="center_vertical"
             android:id="@+id/iv_left"
             android:layout_width="@dimen/dp_38"
             android:layout_height="@dimen/dp_38"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:gravity="center_vertical"
             android:layout_toLeftOf="@id/iv_right"
             android:layout_toRightOf="@id/iv_left"
             android:id="@+id/tv_content"
@@ -37,7 +33,6 @@
             android:layout_height="match_parent"/>
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_alignParentEnd="true"
-            android:background="@color/blackA"
             android:layout_gravity="center_vertical"
             android:id="@+id/iv_right"
             android:layout_width="@dimen/dp_38"

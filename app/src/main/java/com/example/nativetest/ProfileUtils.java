@@ -1,5 +1,7 @@
 package com.example.nativetest;
 
+import android.graphics.Color;
+
 import com.alibaba.fastjson.JSON;
 import com.example.nativetest.db.model.ProfileInfo;
 
@@ -61,5 +63,14 @@ public class ProfileUtils {
 
         map.put("Data",JSON.toJSON(dataMap));
         return map;
+    }
+
+    public static int getNameColor(String color){
+        try {
+            return Color.parseColor("#"+color);
+
+        }catch (Exception e){
+            return Color.parseColor("#0A0A0B");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.nativetest.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -106,6 +107,30 @@ public class SettingPersonInfoActivity extends BaseActivity {
             }
         });
 
+        mUserInfoViewModel.getUploadResult().observe(this,resource->{
+              if (resource.status == Status.SUCCESS) {
+                    dismissLoadingDialog(new Runnable() {
+                        @Override
+                        public void run() {
+//                            ProfileUtils.sProfileInfo = resource.data;
+//                            mUserInfoViewModel.getProfileCache().saveUserCache(resource.data);
+//                            refreshUI();
+                        }
+                    });
+
+                } else if (resource.status == Status.LOADING) {
+//                    showLoadingDialog("");
+                } else {
+//                    dismissLoadingDialog(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            showToast(resource.message);
+//                        }
+//                    });
+//                }
+            }
+        });
+
         if(mUserInfoViewModel.getProfileCache().getUserCache()==null) {
             mUserInfoViewModel.getProfile();
         }else {
@@ -119,6 +144,7 @@ public class SettingPersonInfoActivity extends BaseActivity {
         ProfileInfo profileInfo = mUserInfoViewModel.getProfileCache().getUserCache();
         if(profileInfo==null){return;}
         mSivNickname.setValue(profileInfo.getHead().getName());
+        mSivNickname.setValueColor(Color.parseColor("#"+profileInfo.getHead().getNameColor()));
         mSivGender.setValue(profileInfo.getHead().isGender()?R.string.man:R.string.women);
         mSivCity.setValue(profileInfo.getLocation());
         mSivOwn.setValue(profileInfo.getBio());
@@ -206,8 +232,8 @@ public class SettingPersonInfoActivity extends BaseActivity {
      * @param uri
      */
     private void uploadPortrait(Uri uri) {
-        String path = uri.getPath();
-        mUserInfoViewModel.uploadAvatar(path);
+//        String path = uri.getPath();
+        mUserInfoViewModel.uploadAvatar(uri);
     }
 
     @Override

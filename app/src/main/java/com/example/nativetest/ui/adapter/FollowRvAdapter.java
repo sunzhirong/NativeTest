@@ -3,16 +3,16 @@ package com.example.nativetest.ui.adapter;
 import android.content.Context;
 import android.view.View;
 
-import com.example.nativetest.model.FollowBean;
+import com.example.nativetest.db.model.ProfileHeadInfo;
 import com.example.nativetest.ui.item.ItemFollow;
 
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FollowRvAdapter extends BaseRvAdapter<FollowBean> {
+public class FollowRvAdapter extends BaseRvAdapter<ProfileHeadInfo> {
 
-    public FollowRvAdapter(Context context, List<FollowBean> datas) {
+    public FollowRvAdapter(Context context, List<ProfileHeadInfo> datas) {
         super(context, datas);
     }
 
