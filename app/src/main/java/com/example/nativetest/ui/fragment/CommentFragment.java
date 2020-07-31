@@ -20,6 +20,8 @@ import com.example.nativetest.event.ItemCommentEvent;
 import com.example.nativetest.event.SelectCompleteEvent;
 import com.example.nativetest.model.CommentAtReq;
 import com.example.nativetest.model.CommentBean;
+import com.example.nativetest.model.FollowBean;
+import com.example.nativetest.model.FriendInfo;
 import com.example.nativetest.ui.activity.SelectAtPersonActivity;
 import com.example.nativetest.ui.adapter.CommentRvAdapter;
 import com.example.nativetest.utils.ToastUtils;
@@ -160,7 +162,7 @@ public class CommentFragment extends BaseFragment {
 
     public void onEventMainThread(SelectCompleteEvent event) {
         String result = "";
-        for (ProfileHeadInfo bean : event.list){
+        for (FollowBean bean : event.list){
             result = result.concat("@").concat(bean.getName()).concat(" ");
         }
         SLog.e("niko", result);

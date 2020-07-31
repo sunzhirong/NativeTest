@@ -11,6 +11,13 @@
     android:orientation="horizontal">
 
 
+    <TextView
+        android:id="@+id/tv_select"
+        android:background="@drawable/friend_selector"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
     <io.rong.imkit.widget.AsyncImageView
         android:layout_gravity="center_vertical"
@@ -24,6 +31,7 @@
         android:layout_marginLeft="10dp"
         android:id="@+id/tv_name"
         style="@style/tv14BlackBStyle"/>
+
 
 
 </LinearLayout>

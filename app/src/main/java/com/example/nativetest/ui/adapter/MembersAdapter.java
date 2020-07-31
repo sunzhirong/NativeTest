@@ -7,8 +7,12 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.example.nativetest.ProfileUtils;
 import com.example.nativetest.R;
+import com.example.nativetest.common.NetConstant;
 import com.example.nativetest.db.model.ProfileHeadInfo;
+import com.example.nativetest.model.FriendInfo;
+import com.example.nativetest.utils.glideutils.GlideImageLoaderUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -63,9 +67,11 @@ public class MembersAdapter extends BaseAdapter implements SectionIndexer {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        ProfileHeadInfo userInfo = mList.get(position).userInfo;
+        FriendInfo userInfo = mList.get(position).userInfo;
         if (userInfo != null) {
             viewHolder.name.setText(userInfo.getName());
+            viewHolder.name.setTextColor(ProfileUtils.getNameColor(userInfo.getNameColor()));
+            GlideImageLoaderUtil.loadCircleImage(parent.getContext(),viewHolder.portrait, userInfo.getUserIcon());
 //                if (!TextUtils.isEmpty(userInfo.getExtra())) {
 //                    try {
 //                        JSONObject jsonObject = new JSONObject(userInfo.getExtra());
@@ -133,10 +139,10 @@ public class MembersAdapter extends BaseAdapter implements SectionIndexer {
     }
 
     public static class MemberInfo {
-        public ProfileHeadInfo userInfo;
+        public FriendInfo userInfo;
         String letter;
 
-        public MemberInfo(ProfileHeadInfo userInfo) {
+        public MemberInfo(FriendInfo userInfo) {
             this.userInfo = userInfo;
         }
 

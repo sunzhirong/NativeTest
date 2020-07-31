@@ -19,11 +19,13 @@ import io.rong.eventbus.EventBus;
 import io.rong.imkit.widget.AsyncImageView;
 
 public class ItemFollow extends BaseItemView {
+    @BindView(R.id.tv_select)
+    TextView mTvSelect;
     @BindView(R.id.rc_left)
     AsyncImageView mRcLeft;
     @BindView(R.id.tv_name)
     TextView mTvName;
-    private ProfileHeadInfo bean;
+    private FollowBean bean;
 
     public ItemFollow(Context context) {
         super(context);
@@ -39,7 +41,7 @@ public class ItemFollow extends BaseItemView {
     }
 
 
-    public void bindData(ProfileHeadInfo bean) {
+    public void bindData(FollowBean bean) {
         this.bean = bean;
         mTvName.setText(bean.getName());
         mTvName.setTextColor(ProfileUtils.getNameColor(bean.getNameColor()));
@@ -48,6 +50,7 @@ public class ItemFollow extends BaseItemView {
 
     @OnClick(R.id.ll_container)
     public void onViewClicked() {
+        mTvSelect.setSelected(!mTvSelect.isSelected());
         EventBus.getDefault().post(new SelectAtEvent(bean));
     }
 }

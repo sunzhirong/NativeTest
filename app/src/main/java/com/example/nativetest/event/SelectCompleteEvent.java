@@ -7,8 +7,8 @@ import com.example.nativetest.model.FriendInfo;
 import java.util.List;
 
 public class SelectCompleteEvent {
-    public List<ProfileHeadInfo> list ;
-    public SelectCompleteEvent(List<ProfileHeadInfo> list) {
+    public List<FollowBean> list ;
+    public SelectCompleteEvent(List<FollowBean> list) {
         this.list = list;
     }
 }

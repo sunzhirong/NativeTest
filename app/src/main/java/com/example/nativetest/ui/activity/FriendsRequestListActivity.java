@@ -53,9 +53,11 @@ public class FriendsRequestListActivity extends BaseActivity {
     private void initViewModel() {
         mUserInfoViewModel = ViewModelProviders.of(this).get(UserInfoViewModel.class);
         mUserInfoViewModel.getAddFollowingsResult().observe(this,result->{
-            mBeans.remove(pos);
-            mFriendsRequestRvAdapter.notifyDataSetChanged();
-            EventBus.getDefault().post(new AddFollowCompleteEvent());
+            if(result.RsCode==NetConstant.REQUEST_SUCCESS_CODE) {
+                EventBus.getDefault().post(new AddFollowCompleteEvent(mBeans.get(pos).getUID()));
+                mBeans.remove(pos);
+                mFriendsRequestRvAdapter.notifyDataSetChanged();
+            }
         });
     }
 

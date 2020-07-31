@@ -79,7 +79,7 @@ public interface ScUserService {
 
     @POST(ScUrl.FOLLOWERS_LIST)
     @Headers(NetConstant.JSON)
-    LiveData<Result<List<ProfileHeadInfo>>> getFollowerList(@Body RequestBody body);
+    LiveData<Result<List<FriendInfo>>> getFollowerList(@Body RequestBody body);
 
 
     @POST(ScUrl.FOLLOWERS_REQUEST_LIST)

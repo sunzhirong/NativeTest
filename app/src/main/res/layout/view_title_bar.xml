@@ -30,12 +30,13 @@
 
 
     <androidx.appcompat.widget.AppCompatImageButton
+        android:visibility="gone"
         android:id="@+id/ivRight"
         android:layout_width="@dimen/dp_32"
         android:layout_height="@dimen/dp_32"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_8"
-        android:background="@null"
+        android:background="@drawable/seal_ic_title_more"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/dp_6"/>
 

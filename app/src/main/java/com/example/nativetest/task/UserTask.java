@@ -303,7 +303,7 @@ public class UserTask {
         return scUserService.getFollowList(requestBody);
     }
 
-    public LiveData<Result<List<ProfileHeadInfo>>> getFollowerList(int skip, int take){
+    public LiveData<Result<List<FriendInfo>>> getFollowerList(int skip, int take){
         HashMap<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("Skip", skip);
         paramsMap.put("Take", take);
@@ -326,16 +326,14 @@ public class UserTask {
 
     public LiveData<Result<Boolean>> addFollowings(int uid){
         HashMap<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("Data", 0);
-        paramsMap.put("UID", uid);
+        paramsMap.put("Data", uid);
         RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
         return scUserService.addFollowings(requestBody);
     }
 
     public LiveData<Result<Boolean>> removeFollowings(int uid){
         HashMap<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("Data", 0);
-        paramsMap.put("UID", uid);
+        paramsMap.put("Data", uid);
         RequestBody requestBody = RetrofitUtil.createJsonRequest(paramsMap);
         return scUserService.removeFollowings(requestBody);
     }

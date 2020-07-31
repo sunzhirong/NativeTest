@@ -34,7 +34,7 @@ public class UserInfoViewModel extends AndroidViewModel {
     private SingleSourceLiveData<Resource<String>> uploadResult =  new SingleSourceLiveData<>();
     private SingleSourceLiveData<Result<List<CommentBean>>> commentResult =  new SingleSourceLiveData<>();
     private SingleSourceLiveData<Result<List<FollowBean>>> followResult =  new SingleSourceLiveData<>();
-    private SingleSourceLiveData<Result<List<ProfileHeadInfo>>> followerListResult =  new SingleSourceLiveData<>();
+    private SingleSourceLiveData<Result<List<FriendInfo>>> followerListResult =  new SingleSourceLiveData<>();
     private SingleSourceLiveData<Result<List<FollowRequestInfo>>> getFollowerRequestListResult =  new SingleSourceLiveData<>();
     private SingleSourceLiveData<Result<Boolean>> addFollowingsResult =  new SingleSourceLiveData<>();
     private SingleSourceLiveData<Result<Boolean>> removeFollowingsResult =  new SingleSourceLiveData<>();
@@ -119,7 +119,7 @@ public class UserInfoViewModel extends AndroidViewModel {
         followerListResult.setSource(userTask.getFollowerList(skip,take));
     }
 
-    public SingleSourceLiveData<Result<List<ProfileHeadInfo>>> getFollowerListResult() {
+    public SingleSourceLiveData<Result<List<FriendInfo>>> getFollowerListResult() {
         return followerListResult;
     }
 

@@ -18,6 +18,7 @@ import com.example.nativetest.event.SelectAtEvent;
 import com.example.nativetest.event.SelectCompleteEvent;
 import com.example.nativetest.event.ShowMoreEvent;
 import com.example.nativetest.model.FollowBean;
+import com.example.nativetest.model.FollowBean;
 import com.example.nativetest.ui.adapter.FollowRvAdapter;
 import com.example.nativetest.viewmodel.UserInfoViewModel;
 import com.zhy.view.flowlayout.FlowLayout;
@@ -46,11 +47,11 @@ public class SelectAtPersonActivity extends BaseActivity {
     RecyclerView mRvFollow;
     @BindView(R.id.et_search)
     EditText mEtSearch;
-    private TagAdapter<ProfileHeadInfo> mTagAdapter;
-    private List<ProfileHeadInfo> mList;
+    private TagAdapter<FollowBean> mTagAdapter;
+    private List<FollowBean> mList;
     private UserInfoViewModel mUserInfoViewModel;
     private FollowRvAdapter mFollowRvAdapter;
-    private List<ProfileHeadInfo> mRsData;
+    private List<FollowBean> mRsData;
 
     @Override
     protected int getLayoutId() {
@@ -61,9 +62,9 @@ public class SelectAtPersonActivity extends BaseActivity {
     protected void initView() {
         EventBus.getDefault().register(this);
         mList = new ArrayList<>();
-        mTagAdapter = new TagAdapter<ProfileHeadInfo>(mList) {
+        mTagAdapter = new TagAdapter<FollowBean>(mList) {
             @Override
-            public View getView(FlowLayout parent, int position, ProfileHeadInfo bean) {
+            public View getView(FlowLayout parent, int position, FollowBean bean) {
                 TextView tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.flowlayout_tv,
                         mFl, false);
                 tv.setText("@"+bean.getName());
@@ -94,8 +95,8 @@ public class SelectAtPersonActivity extends BaseActivity {
                 if(TextUtils.isEmpty(content)){
                     mFollowRvAdapter.setDatas(mRsData);
                 }else {
-                    List<ProfileHeadInfo> infos = new ArrayList<>();
-                    for(ProfileHeadInfo info :mRsData){
+                    List<FollowBean> infos = new ArrayList<>();
+                    for(FollowBean info :mRsData){
                         if(info.getName().contains(content)){
                             infos.add(info);
                         }
@@ -111,14 +112,14 @@ public class SelectAtPersonActivity extends BaseActivity {
 
     private void initViewModel() {
         mUserInfoViewModel = ViewModelProviders.of(this).get(UserInfoViewModel.class);
-        mUserInfoViewModel.getFollowerListResult().observe(this, result -> {
+        mUserInfoViewModel.getFollowListResult().observe(this, result -> {
             if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
                 mRsData = result.getRsData();
                 mFollowRvAdapter.setDatas(mRsData);
             }
         });
 
-        mUserInfoViewModel.getFollowerList(NetConstant.SKIP,NetConstant.TAKE);
+        mUserInfoViewModel.getFollowList(NetConstant.SKIP,NetConstant.TAKE);
     }
 
 

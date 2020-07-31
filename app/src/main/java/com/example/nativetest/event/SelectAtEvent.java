@@ -5,8 +5,8 @@ import com.example.nativetest.model.FollowBean;
 import com.example.nativetest.model.FriendInfo;
 
 public class SelectAtEvent {
-    public ProfileHeadInfo bean ;
-    public SelectAtEvent(ProfileHeadInfo bean) {
+    public FollowBean bean ;
+    public SelectAtEvent(FollowBean bean) {
         this.bean = bean;
     }
 }

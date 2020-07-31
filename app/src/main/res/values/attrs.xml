@@ -69,6 +69,7 @@
         <attr name="title" format="string"/>
         <attr name="show_right_tv" format="boolean"/>
         <attr name="show_line" format="boolean"/>
+        <attr name="show_right_iv" format="boolean"/>
     </declare-styleable>
 
 

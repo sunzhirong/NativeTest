@@ -25,6 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.rong.eventbus.EventBus;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
 
 public class SelectGoupMemberActivity extends BaseActivity {
     @BindView(R.id.tv_cancel)
@@ -48,6 +51,7 @@ public class SelectGoupMemberActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         mList = new ArrayList<>();
 
         mRvGroup.setLayoutManager(new LinearLayoutManager(mContext));
@@ -88,8 +92,8 @@ public class SelectGoupMemberActivity extends BaseActivity {
         mUserInfoViewModel = ViewModelProviders.of(this).get(UserInfoViewModel.class);
         mUserInfoViewModel.getCreateGroupResult().observe(this, result -> {
             if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
-
-                finish();
+                RongIM.getInstance().startConversation(this, Conversation.ConversationType.GROUP, String.valueOf(result.RsData), "Niko 测试群聊");
+//                finish();
             }
         });
 
@@ -142,5 +146,11 @@ public class SelectGoupMemberActivity extends BaseActivity {
                 mTvComplete.setText("创建" + mList.size());
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

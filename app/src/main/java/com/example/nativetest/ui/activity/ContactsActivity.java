@@ -22,6 +22,7 @@ import com.example.nativetest.db.model.ProfileHeadInfo;
 import com.example.nativetest.event.AddFollowCompleteEvent;
 import com.example.nativetest.event.FollowEvent;
 import com.example.nativetest.model.FollowRequestInfo;
+import com.example.nativetest.model.FriendInfo;
 import com.example.nativetest.ui.adapter.MembersAdapter;
 import com.example.nativetest.utils.log.SLog;
 import com.example.nativetest.viewmodel.UserInfoViewModel;
@@ -29,6 +30,7 @@ import com.example.nativetest.viewmodel.UserInfoViewModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -47,7 +49,6 @@ public class ContactsActivity extends BaseActivity implements MembersAdapter.OnD
     TextView mTvCount;
     private UserInfoViewModel mUserInfoViewModel;
 
-    private int requestCount;
     private ArrayList<FollowRequestInfo> mRsData;
     private int deletePos;
 
@@ -141,13 +142,13 @@ public class ContactsActivity extends BaseActivity implements MembersAdapter.OnD
         mUserInfoViewModel = ViewModelProviders.of(this).get(UserInfoViewModel.class);
         mUserInfoViewModel.getFollowerListResult().observe(this, result -> {
             if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
-                SLog.e("UserInfoViewModel","刷新联系人");
+                SLog.e("UserInfoViewModel", "刷新联系人");
                 mAllMemberList.clear();
-                List<ProfileHeadInfo> rsData = result.getRsData();
+                List<FriendInfo> rsData = result.getRsData();
 //                mFollowRvAdapter.setDatas(rsData);
 
                 for (int i = 0; i < rsData.size(); i++) {
-                    ProfileHeadInfo profileHeadInfo = rsData.get(i);
+                    FriendInfo profileHeadInfo = rsData.get(i);
                     MembersAdapter.MemberInfo memberInfo = new MembersAdapter.MemberInfo(profileHeadInfo);
                     String sortString = "#";
                     //汉字转换成拼音
@@ -175,19 +176,21 @@ public class ContactsActivity extends BaseActivity implements MembersAdapter.OnD
         mUserInfoViewModel.getFollowerRequestListResult().observe(this, result -> {
             if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
                 mRsData = (ArrayList<FollowRequestInfo>) result.getRsData();
-                for (FollowRequestInfo requestInfo : mRsData) {
-                    if (!requestInfo.isIsFriend()) {
-                        requestCount++;
+                Iterator<FollowRequestInfo> iterator = mRsData.iterator();
+                while (iterator.hasNext()) {
+                    FollowRequestInfo info = iterator.next();
+                    if (info.isIsFriend()) {
+                        iterator.remove();//使用迭代器的删除方法删除
                     }
                 }
             }
             refreshDot();
         });
 
-        mUserInfoViewModel.getRemoveFollowingsResult().observe(this,result->{
+        mUserInfoViewModel.getRemoveFollowingsResult().observe(this, result -> {
             if (result.RsCode == NetConstant.REQUEST_SUCCESS_CODE) {
                 mAllMemberList.remove(deletePos);
-               mAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
             }
         });
 
@@ -197,17 +200,23 @@ public class ContactsActivity extends BaseActivity implements MembersAdapter.OnD
     }
 
     private void refreshDot() {
-        if (requestCount > 0) {
+        if (mRsData.size() > 0) {
             mTvCount.setVisibility(View.VISIBLE);
-            mTvCount.setText(String.valueOf(requestCount));
-        }else {
+            mTvCount.setText(String.valueOf(mRsData.size()));
+        } else {
             mTvCount.setVisibility(View.GONE);
         }
     }
 
     public void onEventMainThread(AddFollowCompleteEvent event) {
         mUserInfoViewModel.getFollowerList(NetConstant.SKIP, NetConstant.TAKE);
-        requestCount--;
+        Iterator<FollowRequestInfo> iterator = mRsData.iterator();
+        while (iterator.hasNext()) {
+            FollowRequestInfo info = iterator.next();
+            if (info.getUID() == event.uid) {
+                iterator.remove();//使用迭代器的删除方法删除
+            }
+        }
         refreshDot();
     }
 
@@ -222,16 +231,15 @@ public class ContactsActivity extends BaseActivity implements MembersAdapter.OnD
     @OnClick(R.id.ll_focus)
     public void onViewClicked() {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("beans",mRsData);
-        readyGo(FriendsRequestListActivity.class,bundle);
+        bundle.putSerializable("beans", mRsData);
+        readyGo(FriendsRequestListActivity.class, bundle);
     }
 
 
     @Override
     public void onDelete(int position) {
         this.deletePos = position;
-        mUserInfoViewModel.removeFollowings(mRsData.get(position).getUID());
-
+        mUserInfoViewModel.removeFollowings(mAllMemberList.get(position).userInfo.getUID());
     }
 
     @Override

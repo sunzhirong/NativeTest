@@ -150,6 +150,7 @@
         <activity android:name=".tesstActivity" />
         <activity android:name=".TestActivity1" />
         <activity android:name=".ui.activity.SelectGoupMemberActivity" />
+        <activity android:name=".ui.activity.ChatSettingActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

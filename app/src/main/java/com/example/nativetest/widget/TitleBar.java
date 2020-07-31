@@ -67,6 +67,10 @@ public class TitleBar extends RelativeLayout {
                 line.setVisibility(b?VISIBLE:GONE);
             }
 
+            if (array.hasValue(R.styleable.TitleBar_show_right_iv)) {
+                boolean b = array.getBoolean(R.styleable.TitleBar_show_right_iv, false);
+                mTitleBarIvRight.setVisibility(b?VISIBLE:GONE);
+            }
 //            if (array.hasValue(R.styleable.TitleBar_right_icon)) {
 //                mTitleBarIvRight.setImageResource(array.getResourceId(R.styleable.TitleBar_right_icon,0));
 //            }
