@@ -1,12 +1,9 @@
 package com.example.nativetest.ui.activity;
 
-import android.view.Gravity;
 import android.view.View;
 
 import com.example.nativetest.R;
 import com.example.nativetest.TestTabActivity;
-import com.example.nativetest.db.DbManager;
-import com.example.nativetest.ui.fragment.MainConversationListFragment;
 import com.example.nativetest.ui.fragment.MainFragment;
 import com.example.nativetest.widget.MainBottomTabGroupView;
 import com.example.nativetest.widget.MainBottomTabItem;
@@ -20,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
-import io.rong.imkit.fragment.ConversationListFragment;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.tg_bottom_tabs)
@@ -32,6 +28,7 @@ public class MainActivity extends BaseActivity {
      * tab 项枚举
      */
     public enum Tab {
+
         /**
          * 我的
          */
