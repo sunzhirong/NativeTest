@@ -89,25 +89,30 @@
         <activity android:name=".ui.activity.PersonalProfileActivity" />
         <activity android:name=".VipActivity" />
         <activity android:name=".SelectNickNameColorActivity" />
-
-
-        <!--会话列表-->
-        <activity
-            android:name=".ConversationListActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="com.example.nativetest"
-                    android:pathPrefix="/conversationlist"
-                    android:scheme="rong" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.activity.FriendsRequestListActivity" />
+        <activity android:name=".ui.activity.SelectAtPersonActivity" />
+        <activity android:name=".ui.activity.MyLikedActivity" />
+        <activity android:name=".ui.activity.SelectGoupMemberActivity" />
+        <activity android:name=".ui.activity.ChatSettingActivity" />
         <activity android:name=".ui.activity.ContactsActivity" />
+
+
+<!--        &lt;!&ndash;会话列表&ndash;&gt;-->
+<!--        <activity-->
+<!--            android:name=".ConversationListActivity"-->
+<!--            android:windowSoftInputMode="stateHidden|adjustResize">-->
+
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+
+<!--                <data-->
+<!--                    android:host="com.example.nativetest"-->
+<!--                    android:pathPrefix="/conversationlist"-->
+<!--                    android:scheme="rong" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
 
         <!--会话界面-->
         <activity
@@ -144,13 +149,7 @@
                     android:scheme="rong" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.FriendsRequestListActivity" />
-        <activity android:name=".ui.activity.SelectAtPersonActivity" />
-        <activity android:name=".ui.activity.MyLikedActivity" />
-        <activity android:name=".tesstActivity" />
-        <activity android:name=".TestActivity1" />
-        <activity android:name=".ui.activity.SelectGoupMemberActivity" />
-        <activity android:name=".ui.activity.ChatSettingActivity" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"

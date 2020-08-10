@@ -186,7 +186,7 @@ public class MainActivity extends BaseActivity {
                 }else if(item.id == Tab.MY.getValue()){
 //                    readyGo(ChatFragment.class);
                 }else {
-                    readyGo(ConversationListActivity.class);
+//                    readyGo(ConversationListActivity.class);
                 }
             }
         });
