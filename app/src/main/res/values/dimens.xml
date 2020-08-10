@@ -1,5 +1,4 @@
 <resources>
-
     <!-- dp and sp values, must be defind in this file! -->
     <!-- view size,you can add if there is no one -->
     <dimen name="dp_m_60">-60dp</dimen>
@@ -419,8 +418,6 @@
     <dimen name="sp_40">40sp</dimen>
     <dimen name="sp_42">42sp</dimen>
     <dimen name="sp_48">48sp</dimen>
-
-
 
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="seal_common_normal_margin">16dp</dimen>
